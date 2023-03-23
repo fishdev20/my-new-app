@@ -14,6 +14,9 @@ const dataContext = {
   },
   toggleDarkMode(channel: string) {
     return ipcRenderer.invoke(channel)
+  },
+  toggleNotification(channel: string) {
+    return ipcRenderer.invoke(channel)
   }
 };
 

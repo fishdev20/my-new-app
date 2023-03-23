@@ -6,28 +6,25 @@ import { addUser, UserData } from '../../redux/userSlice';
 import { useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
 
-const generateId = () => {
-    const randomNumber = Math.floor(Math.random() * 9000000000000000000) + 1000000000000000000
-    return randomNumber.toString()
+const initUser: UserData = {
+    id: nanoid(21),
+    name: '',
+    birthDay: new Date().toISOString().slice(0, 10),
+    email: '',
+    age: null,
 }
 
 export default function () {
     const classes = useStyles(); 
     const dispatch = useDispatch()
-    const [user,setUser] = useState<UserData>({
-        id: nanoid(21),
-        name: '',
-        birthDay: new Date().toISOString().slice(0, 10),
-        email: '',
-        age: null,
-    })
+    const [user,setUser] = useState<UserData>(initUser)
 
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
         dispatch(addUser(user))
+        setUser(initUser)
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(user)
         const {name,value} = e.target 
         setUser((prevState) => ({
             ...prevState,
@@ -37,7 +34,7 @@ export default function () {
     
   return (
     <div className={classes.root}>
-        <form className={classes.form} onSubmit={handleSubmit}>
+        <form className={classes.form}>
             <TextField
                 name='name'
                 className={classes.textField}

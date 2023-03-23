@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/named
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
-// import { formData } from '../components/Form';
 
 import context from '../../database/dataContextApi';
 
@@ -37,19 +36,20 @@ export const usersSlice = createSlice({
         email: action.payload.email,
         age: action.payload.age
       }
-      console.log(newUser)
+      if(newUser.name === '' && newUser.email === '') {
+        context.toggleNotification('alert')
+      }
+      else {
+        context.addUser(newUser)
+        state.usersList = [...state.usersList, newUser];
+      }
 
-      context.addUser(newUser)
-      
-      state.usersList = [...state.usersList, newUser];
     },
     deleteUser: (state, action: PayloadAction<string>) => {
       const index = state.usersList.findIndex(
         (user) => user.id === action.payload
       );
-
-    //   context.deleteUser(action.payload)
-
+      context.deleteUser(action.payload)
       state.usersList.splice(index, 1);
     },
   },

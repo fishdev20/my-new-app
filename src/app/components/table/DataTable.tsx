@@ -7,9 +7,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { UserData } from '../../redux/userSlice';
-import { useSelector } from 'react-redux';
+import { deleteUser, UserData } from '../../redux/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,7 +37,7 @@ function createData(
   user: UserData
 ) {
   return { 
-    birthday: user.birthday,
+    birthday: user.birthDay,
     name: user.name,
     email: user.email,
     age: user.age,
@@ -47,7 +49,17 @@ function createData(
 export default function DataTable() {
   const users = useSelector((state: RootState) => state.users.usersList);
   const rows = users.map((user: UserData) => createData(user))
+  const dispatch = useDispatch()
+
+  const handleDeleteUser = (id: string) => {
+    dispatch(deleteUser(id))
+  }
+  if(users.length === 0) {
+    return <div>NO USER FOUND</div>
+  }
+
   return (
+    <div>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
@@ -57,6 +69,7 @@ export default function DataTable() {
             <StyledTableCell align="right">Birthday</StyledTableCell>
             <StyledTableCell align="right">Age</StyledTableCell>
             <StyledTableCell align="right">Email</StyledTableCell>
+            <StyledTableCell align="right"></StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -69,10 +82,24 @@ export default function DataTable() {
               <StyledTableCell align="right">{row.birthday}</StyledTableCell>
               <StyledTableCell align="right">{row.age}</StyledTableCell>
               <StyledTableCell align="right">{row.email}</StyledTableCell>
+              <StyledTableCell align="right"><IconButton onClick={() => handleDeleteUser(row.id)}><DeleteIcon /></IconButton></StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    </div>
   );
 }
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: '#fff',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};

@@ -1,7 +1,8 @@
-import { ipcMain, nativeTheme } from 'electron';
+import { ipcMain, nativeTheme, dialog, Notification } from 'electron';
 import database from 'better-sqlite3';
 import fs from 'fs';
 import { UserData } from '../../src/app/redux/userSlice';
+const Alert = require("electron-alert");
 
 function api() {
   const db = new database('database.db');
@@ -47,6 +48,17 @@ function api() {
       nativeTheme.themeSource = 'dark'
     }
     return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMain.handle('alert', () => {
+    let swalOptions = {
+      position: "center",
+      title: "Signed in successfully",
+      icon: "success",
+      showConfirmButton: true,
+      timer: 3000
+    };
+    Alert.fireToast(swalOptions);
   })
 }
 
